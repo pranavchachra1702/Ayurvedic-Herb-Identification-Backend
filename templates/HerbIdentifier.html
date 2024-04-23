@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+    <img src="{{ url_for('static',filename=image_path)}}" alt="UploadedImage" width=224px height=224px>
+    <h3 class="bg">Predicted Class Label: {{Classified_image}}</h3>
+    <p class="bg">Summary: {{summary}}</p>
+{% endblock content %}
