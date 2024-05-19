@@ -56,6 +56,10 @@ def test():
 def predict():
     if 'image' not in request.files:
         return jsonify({'error': 'No file part'}), 400
+    for file_name in os.listdir(UPLOAD_FOLDER):
+            file_path = os.path.join(UPLOAD_FOLDER, file_name)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
 
     file = request.files['image']
     print("File received")
@@ -89,12 +93,15 @@ def predict():
     test_img_path = './static/images/'+os.listdir('./static/images/')[0]
     
     output = image_segmentation_and_classification(test_img_path)
-    # print(output)
+    print(output)
     # # summary = text_summarization(output)
     # print(image_path.replace('./static',''))
     # return render_template('HerbIdentifier.html', Classified_image=output, image_path=image_path.replace('./static',''),summary=loaded_summaries[output])
 
     # return jsonify(output, image_path.replace('./static',''), loaded_summaries[output])
+    if(output == "Unknown"):
+        return jsonify({'classlabel' : output, 'summary': ""})
+    
     for file_name in os.listdir(UPLOAD_FOLDER):
             file_path = os.path.join(UPLOAD_FOLDER, file_name)
             if os.path.isfile(file_path):
@@ -165,15 +172,21 @@ def image_segmentation_and_classification(test_img_path):
     preprocessed_test_image = np.expand_dims(preprocessed_test_image, axis=0)
     preprocessed_test_image = preprocessed_test_image / 255.0  # Normalize
 
+    threshold = 0.8495697617530823
     # Make predictions using the trained model
     predictions = model.predict(preprocessed_test_image)
-
+    max_prob = np.max(predictions)
+    # Check if the maximum probability is above the threshold
+    if max_prob < threshold:
+        return "Unknown"
+    # Display a message on Herb Identifier Page that image is an outlier.
     # Get the predicted class label
-    predicted_class_index = np.argmax(predictions)
-    predicted_class_label = class_names[predicted_class_index]
 
-    # Return the predicted class label
-    return predicted_class_label
+    else:
+        predicted_class_index = np.argmax(predictions)
+        predicted_class_label = class_names[predicted_class_index]
+        # Return the predicted class label
+        return predicted_class_label
 
 # def text_summarization(predicted_class_label):
 
@@ -217,4 +230,4 @@ def login():
     return render_template('login.html', title='Login', form=form) 
 
 if __name__=='__main__':
-    app.run(debug=True,port=5001)
+    app.run(debug=True, host='127.0.0.1', port=5001)
