@@ -1,21 +1,21 @@
 from flask import Flask, render_template, url_for, flash, redirect, request,jsonify
 from flask_cors import CORS
-from forms import RegistrationForm, LoginForm
+# from forms import RegistrationForm, LoginForm
 import os
 import cv2
 import pickle
 import numpy as np
 import pandas as pd
 import shutil
-# from tensorflow import keras
+from tensorflow import keras
 from keras.models import load_model
-from keras.preprocessing.image import ImageDataGenerator
-from keras.applications import DenseNet121
-from keras import layers
-from keras import Model
-from keras.optimizers import Adam
+# from keras.preprocessing.image import ImageDataGenerator
+# from keras.applications import DenseNet121
+# from keras import layers
+# from keras import Model
+# from keras.optimizers import Adam
 from keras.preprocessing import image
-from transformers import PegasusForConditionalGeneration, PegasusTokenizer
+# from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 model = load_model('Densenetmodel.h5')    
 # class names
 class_names=np.load('./class_names.npy')
@@ -210,24 +210,24 @@ def image_segmentation_and_classification(test_img_path):
 def about():
     return render_template('about.html', title='About')
 
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home'))
-    return render_template('register.html', title='Register', form=form)
+# @app.route("/register", methods=['GET', 'POST'])
+# def register():
+#     form = RegistrationForm()
+#     if form.validate_on_submit():
+#         flash(f'Account created for {form.username.data}!', 'success')
+#         return redirect(url_for('home'))
+#     return render_template('register.html', title='Register', form=form)
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('home'))
-        else:
-            flash('Login Unsuccessful. Please check username and password','danger')
-    return render_template('login.html', title='Login', form=form) 
+# @app.route("/login", methods=['GET', 'POST'])
+# def login():
+#     form = LoginForm()
+#     if form.validate_on_submit():
+#         if form.email.data == 'admin@blog.com' and form.password.data == 'password':
+#             flash('You have been logged in!', 'success')
+#             return redirect(url_for('home'))
+#         else:
+#             flash('Login Unsuccessful. Please check username and password','danger')
+#     return render_template('login.html', title='Login', form=form) 
 
 if __name__=='__main__':
     app.run(debug=True, port=5001)
