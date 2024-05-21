@@ -46,12 +46,8 @@ UPLOAD_FOLDER = './static/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
-@app.route("/home")
 def home():
-    return render_template('home.html', posts=posts)
-@app.route("/test")
-def test():
-    return "This a test"
+    return "This is a test 1"
 @app.route("/upload", methods=['POST'])
 def predict():
     if 'image' not in request.files:
@@ -206,28 +202,6 @@ def image_segmentation_and_classification(test_img_path):
 
     return generated_summary
 
-@app.route("/about")
-def about():
-    return render_template('about.html', title='About')
-
-# @app.route("/register", methods=['GET', 'POST'])
-# def register():
-#     form = RegistrationForm()
-#     if form.validate_on_submit():
-#         flash(f'Account created for {form.username.data}!', 'success')
-#         return redirect(url_for('home'))
-#     return render_template('register.html', title='Register', form=form)
-
-# @app.route("/login", methods=['GET', 'POST'])
-# def login():
-#     form = LoginForm()
-#     if form.validate_on_submit():
-#         if form.email.data == 'admin@blog.com' and form.password.data == 'password':
-#             flash('You have been logged in!', 'success')
-#             return redirect(url_for('home'))
-#         else:
-#             flash('Login Unsuccessful. Please check username and password','danger')
-#     return render_template('login.html', title='Login', form=form) 
 
 if __name__=='__main__':
     app.run(debug=True, port=5001)
